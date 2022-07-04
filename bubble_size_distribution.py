@@ -5,11 +5,9 @@ from matplotlib import pyplot as plt
 from PIL import Image
 
 def main(argv):
-    default_file = '1.jpeg'
-    filename = argv[0] if len(argv) > 0 else default_file
     # Loads an image
-    src1 = cv.imread(cv.samples.findFile(filename), cv.IMREAD_COLOR)
-    src=cv.resize(src1,(int(src1.shape[1]/4),int(src1.shape[0]/4)), interpolation=cv.INTER_AREA)
+    src1 = cv.imread('1.png', cv.IMREAD_COLOR)
+    src=cv.resize(src1,(int(src1.shape[1]),int(src1.shape[0])), interpolation=cv.INTER_AREA)
     # Check if image is loaded fine
     
     if src is None:
@@ -17,19 +15,21 @@ def main(argv):
         print('Usage: hough_circle.py [image_name -- default ' + default_file + '] \n')
         return -1
     gray = cv.cvtColor(src, cv.COLOR_BGR2GRAY)
+    """
     for i in range(gray.shape[0]):
         for j in range(gray.shape[1]):
-            if gray[i][j]>=150:
+            if gray[i][j]>=200:
                 gray[i][j]=255
             else:
                 gray[i][j] = 0
+                """
     gray = cv.medianBlur(gray, 5)
     im=Image.fromarray(gray)
     im.show()
     rows = gray.shape[0]
-    circles = cv.HoughCircles(gray, cv.HOUGH_GRADIENT, 1, rows / 100,
+    circles = cv.HoughCircles(gray, cv.HOUGH_GRADIENT, 2, rows/100,
                               param1=100, param2=30,
-                              minRadius=0, maxRadius=70)
+                              minRadius=0, maxRadius=10)
     data_radius=[]
     if circles is not None:
         circles = np.uint16(np.around(circles))
